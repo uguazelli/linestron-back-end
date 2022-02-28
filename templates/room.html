@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Next</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socket = io();
+
+    const getRoom = () => {
+        const url = window.location.href;
+        const splittedUrl = url.split("/");
+        const roomIndex = splittedUrl.findIndex((value) => value === "room") + 1
+        const room = splittedUrl[roomIndex]
+        return room
+    }
+
+    socket.emit("connectToRoom", getRoom());
+
+    socket.on(getRoom(), function (msg) {
+        document.getElementById('number').innerHTML = msg;
+    });
+
+</script>
+
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        width: 70%;
+        max-width: 500px;
+        height: 70%;
+        max-height: 500%;
+        border-radius: 13px;
+        -webkit-box-shadow: 0px 3px 15px 5px rgba(0, 0, 0, 0.38);
+        box-shadow: 0px 3px 15px 5px rgba(0, 0, 0, 0.38);
+    }
+
+    .card-title {
+        flex: 1;
+    }
+
+    .card-body {
+        flex: 5;
+    }
+
+    .card-footer {
+        flex: 1;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-title" style="text-align: center;">Your Number is: 14</div>
+            <div class="card-body" style="text-align: center;">Actual number is <span id="number">10</span></div>
+            <div class="card-footer" style="text-align: center;">Next solutions</div>
+        </div>
+    </div>
+</body>
+
+</html>

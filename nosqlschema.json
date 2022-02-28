@@ -1,0 +1,39 @@
+[
+    {
+        "type": "personal",
+        "first_name": "Albert",
+        "last_name": "Einstein",
+        "email": "aeinstein@gmail.com",
+        "companies": [
+            {
+                "company_doc_id": "P2ReTI7LMddIznbWUnzx",
+                "rooms": [
+                    {
+                        "name": "sala1",
+                        "description": "unique room"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "company_name": "Tron",
+        "company_unique_name": "tron",
+        "rooms": [
+            {
+                "name": "sala1",
+                "description": "unique room"
+            }
+        ],
+        "users": [
+            {
+                "email": "aeinstein@gmail.com",
+                "type": "admin"
+            },
+            {
+                "email": "staff1@gmail.com",
+                "type": "operator"
+            }
+        ]
+    }
+]

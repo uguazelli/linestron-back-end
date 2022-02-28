@@ -1,0 +1,23 @@
+{
+  "name": "nextinline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/firestore": "^5.0.2",
+    "body-parser": "^1.19.2",
+    "cookie-parser": "^1.4.6",
+    "depcheck": "^1.4.3",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "firebase": "^9.6.7",
+    "firebase-admin": "^10.0.2",
+    "firebaseui": "^6.0.1",
+    "socket.io": "^4.4.1"
+  }
+}

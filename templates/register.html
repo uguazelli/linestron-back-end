@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <section>
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required autofocus>
+    </section>
+    <section>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="password" required>
+    </section>
+    <section>
+        <label for="confirmPassword">confirmPassword</label>
+        <input id="confirmPassword" name="password" type="password" autocomplete="confirmPassword" required>
+    </section>
+    <button type="submit" onclick="registerUser()">Submit</button>
+
+</body>
+
+<script>
+    const registerUser = async () => {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        const response = await fetch('/auth/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email, password: password })
+        });
+        if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            throw new Error(message);
+        }
+        const content = await response.json();
+        return content;
+    }
+</script>
+
+</html>
