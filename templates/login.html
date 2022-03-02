@@ -5,22 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
+    <script src="/public/styles/login.css"></script>
+
 </head>
 
 <body>
 
-    <h1>Sign in</h1>
-    <section>
-        <label for="email">Email</label>
-        <input id="email" type="email" autocomplete="email" required autofocus>
-    </section>
-    <section>
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="password" required>
-    </section>
+    <!-- Simulate a smartphone / tablet -->
+    <div class="mobile-container">
 
-    <button type="submit" onclick="login()">Submit</button>
+        <!-- Top Navigation Menu -->
+        <div class="topnav">
+            <a href="#home" class="active">Sign in</a>
+        </div>
+
+        <div style="padding-left:16px">
+            <h4>Email</h4>
+            <input id="email" type="email" autocomplete="email" required autofocus>
+            <h4>Password</h4>
+            <input id="password" name="password" type="password" autocomplete="password" required>
+            <br>
+            <button class="submit_button" style="margin-top: 10px;" onclick="login()">Send</button>
+        </div>
+        <!-- End smartphone / tablet look -->
+    </div>
 
 </body>
 

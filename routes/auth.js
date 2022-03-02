@@ -10,6 +10,11 @@ const app = firebaseapp.initializeApp(constants.firebaseConfig);
 const auth = firebaseAuth.getAuth();
 
 // Routes
+router.get("/loggeduser", function (req, res, next) {
+	if (req.session.email == undefined) {
+		return res.json({ ok: false });
+	} else return res.json({ ok: true, user: req.session.email });
+});
 router.get("/register", function (req, res, next) {
 	res.sendFile(templatesPath + "/register.html");
 });
@@ -41,7 +46,7 @@ router.post("/login", async (req, res, next) => {
 			// Signed in
 			const user = userCredential.user;
 			req.session.email = user.email;
-			return res.json(user);
+			return res.json({ ok: true, user: user.email });
 		})
 		.catch((error) => {
 			const errorCode = error.code;

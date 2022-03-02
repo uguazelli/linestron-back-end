@@ -1,0 +1,61 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+input {
+	border-radius: 3px;
+	border: 1px solid #2d9fd9;
+	width: 350px;
+	height: 30px;
+}
+
+.submit_button {
+	border-radius: 3px;
+	background-color: black;
+	color: white;
+	border: 1px solid black;
+	width: 100px;
+	height: 30px;
+}
+
+.mobile-container {
+	max-width: 480px;
+	margin: auto;
+	border-radius: 10px;
+}
+
+.topnav {
+	overflow: hidden;
+	background-color: #333;
+	position: relative;
+}
+
+.topnav #myLinks {
+	display: none;
+}
+
+.topnav a {
+	color: white;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+	display: block;
+}
+
+.topnav a.icon {
+	background: black;
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.topnav a:hover {
+	background-color: #ddd;
+	color: black;
+}
+
+.active {
+	background-color: #18a0fb;
+	color: white;
+}

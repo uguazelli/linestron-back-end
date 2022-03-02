@@ -1,7 +1,13 @@
 const express = require("express");
 const app = require("express")();
 const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const io = require("socket.io")(http, {
+	cors: {
+		origin: "*",
+		methods: ["GET", "POST"],
+	},
+});
+const cors = require("cors");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var session = require("express-session");
@@ -13,22 +19,13 @@ const authRouter = require("./routes/auth");
 // IO imports
 const registerRoomHandlers = require("./handlers/room");
 
+app.use(cors());
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use(session({ secret: "kj430898fsk23985$093j0ndiy", resave: false, saveUninitialized: true }));
 // parse application/json
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(
-	bodyParser.urlencoded({
-		// to support URL-encoded bodies
-		extended: true,
-	})
-);
-// middleware
-// app.use((req, res, next) => {
-// 	console.log("Time:", Date.now());
-// 	next();
-// });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use("/", indexRouter);
 app.use("/room", roomRouter);
