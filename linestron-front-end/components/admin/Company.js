@@ -1,16 +1,13 @@
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { host } from "../../Constants";
 
-const Companies = () => {
-	const [selectedCompany, setSelectedCompany] = useState("");
-	const [companies, setCompanies] = useState([]);
-	const [companyForm, setCompanyForm] = useState({ name: "", slug: "" });
+const Company = () => {
+	const [company, setCompany] = useState({ name: "", slug: "" });
 
 	const getCompanies = async () => {
 		try {
-			const response = await fetch(host + "/company/byemail", {
+			const response = await fetch(host + "/company", {
 				method: "GET",
 				credentials: "include",
 				headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -23,48 +20,44 @@ const Companies = () => {
 
 	useEffect(async () => {
 		const co = await getCompanies();
-		await setCompanies(co);
+		setCompany({ ...company, name: co.name, slug: co.slug });
 	}, []);
 
-	useEffect(() => {
-		const currentCompany = companies.find((c) => c.slug === selectedCompany);
-		if (currentCompany !== undefined)
-			setCompanyForm({ ...companyForm, name: currentCompany.name, slug: currentCompany.slug });
-	}, [selectedCompany]);
+	const updateCompany = async () => {
+		try {
+			const response = await fetch(host + "/company", {
+				method: "POST",
+				credentials: "include",
+				headers: { Accept: "application/json", "Content-Type": "application/json" },
+				body: JSON.stringify(company),
+			});
+			alert("done");
+			return await response.json();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<View style={styles.cardContainer}>
 			<View style={{ flexDirection: "row", marginBottom: 10 }}>
-				<Text style={{ margin: 10, width: "20%" }}>Select a company</Text>
-				<Picker
-					style={styles.input}
-					selectedValue={selectedCompany}
-					onValueChange={(itemValue, itemIndex) => setSelectedCompany(itemValue)}
-				>
-					<Picker.Item label="Select a company" value="" />
-					{companies.map((item) => (
-						<Picker.Item key={item.id} label={item.name} value={item.slug} />
-					))}
-				</Picker>
-			</View>
-			<View style={{ flexDirection: "row", marginBottom: 10 }}>
 				<Text style={{ margin: 10, width: "20%" }}>Company Name</Text>
 				<TextInput
 					style={styles.input}
-					value={companyForm.name}
-					onChangeText={(v) => setCompanyForm({ ...companyForm, name: v })}
+					value={company.name}
+					onChangeText={(v) => setCompany({ ...company, name: v })}
 				/>
 			</View>
 			<View style={{ flexDirection: "row", marginBottom: 10 }}>
 				<Text style={{ margin: 10, width: "20%" }}>Slug</Text>
 				<TextInput
 					style={styles.input}
-					value={companyForm.slug}
-					onChangeText={(v) => setCompanyForm({ ...companyForm, slug: v })}
+					value={company.slug}
+					onChangeText={(v) => setCompany({ ...company, slug: v })}
 				/>
 			</View>
 			<View style={{ alignItems: "center" }}>
-				<TouchableOpacity style={styles.sendButton}>
+				<TouchableOpacity style={styles.sendButton} onPress={updateCompany}>
 					<Text style={{ color: "white" }}>Save</Text>
 				</TouchableOpacity>
 			</View>
@@ -104,4 +97,5 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 });
-export default Companies;
+
+export default Company;

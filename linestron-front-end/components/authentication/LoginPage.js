@@ -25,7 +25,11 @@ const LoginPage = ({ setAuthenticated }) => {
 		<View style={styles.container}>
 			<Text style={{ fontSize: 20, margin: 40, color: "white" }}>Login Page</Text>
 			<Text style={{ color: "white" }}>Email </Text>
-			<TextInput style={styles.input} onChangeText={(v) => setUserCredential({ ...userCredentials, email: v })} />
+			<TextInput
+				style={styles.input}
+				keyboardType="email-address"
+				onChangeText={(v) => setUserCredential({ ...userCredentials, email: v })}
+			/>
 			<Text style={{ color: "white" }}>Password </Text>
 			<TextInput
 				secureTextEntry={true}

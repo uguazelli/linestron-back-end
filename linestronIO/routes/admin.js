@@ -19,67 +19,9 @@ router.use((req, res, next) => {
 	next();
 });
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-	res.sendFile(templatesPath + "/admin.html");
+router.get("/session/company/:companyID", async (req, res, next) => {
+	req.session.companyId = req.params.companyID;
+	return res.json({ ok: true });
 });
-
-router.post("/company", async (req, res, next) => {
-	try {
-		// Add a new document with a generated id.
-		const docRef = await db.collection("companies").add({
-			company_name: req.body.company_name,
-			company_unique_name: req.body.company_unique_name,
-			users: [
-				{
-					email: req.session.email,
-					type: "admin",
-				},
-			],
-		});
-
-		await db.collection("users").add({
-			email: req.session.email,
-			companies: [
-				{
-					company_doc_id: docRef.id,
-					rooms: [
-						{
-							name: "sala1",
-							description: "unique room",
-						},
-					],
-				},
-			],
-		});
-
-		// const docRef = db.collection("companies").doc(req.body.company_unique_name);
-		// await docRef.set({
-		// 	company_name: req.body.company_name,
-		// 	company_unique_name: req.body.company_unique_name,
-		// 	users: [
-		// 		{
-		// 			email: req.session.email,
-		// 			type: "admin",
-		// 		},
-		// 	],
-		// });
-		return res.json({ status: "ok" });
-	} catch (error) {
-		return res.json({ status: "fail" });
-	}
-});
-
-router.get("/firestore/read", function (req, res, next) {
-	read();
-});
-
-const read = async () => {
-	console.log("starting read");
-	const snapshot = await db.collection("users").get();
-	snapshot.forEach((doc) => {
-		console.log(doc.id, "=>", doc.data());
-	});
-};
 
 module.exports = router;

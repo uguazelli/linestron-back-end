@@ -1,31 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const { Company } = require("../models/Company");
-const { User } = require("../models/User");
+const queries = require("../queries");
+const db = queries.DB;
 
-/* GET home page. */
+router.get("/", async (req, res, next) => {
+	let stmt = db.prepare(queries.COMPANY_GET_BY_ID);
+	let row = stmt.get(req.session.email, req.session.companyId);
+	return res.json(row);
+});
+
+router.post("/", async (req, res, next) => {
+	let stmt = db.prepare(queries.COMPANIES_UPDATE_BY_ID);
+	let update = stmt.run(req.body.name, req.body.slug, req.session.companyId);
+	return res.json(update);
+});
+
 router.get("/byemail", async (req, res, next) => {
-	try {
-		const user = await User.findOne({
-			where: {
-				email: req.session.email,
-			},
-			include: [
-				{
-					model: Company,
-					required: true,
-				},
-			],
-		});
-
-		let admCompanies = user.Companies.filter(function (e) {
-			return e.UserCompany.role === "admin";
-		});
-
-		return res.json(admCompanies);
-	} catch (error) {
-		return res.json({ ok: false, message: "User not logged in" });
-	}
+	let email = req.session.email;
+	let stmt = db.prepare(queries.COMPANIES_GET_BY_EMAIL);
+	let rows = stmt.all(email);
+	return res.json(rows);
 });
 
 module.exports = router;

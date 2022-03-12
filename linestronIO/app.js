@@ -19,12 +19,12 @@ const listEndpoints = require("express-list-endpoints");
 
 // const { Socket } = require("socket.io");
 
-const { Sequelize, DataTypes, Model } = require("sequelize");
-const sequelize = new Sequelize({ dialect: "sqlite", storage: "./database.db" });
-const { User } = require("./models/User");
-const { Company } = require("./models/Company");
-const { UserCompany } = require("./models/UserCompany");
-const { Room } = require("./models/Room");
+// const { Sequelize, DataTypes, Model } = require("sequelize");
+// const sequelize = new Sequelize({ dialect: "sqlite", storage: "./database.db" });
+// const { User } = require("./models/User");
+// const { Company } = require("./models/Company");
+// const { UserCompany } = require("./models/UserCompany");
+// const { Room } = require("./models/Room");
 
 // Cors
 const corsOptions = {
@@ -67,33 +67,33 @@ http.listen(3000, function () {
 	console.log("listening on *:3000");
 });
 
-app.get("/testinsertdb", async (req, res, next) => {
-	try {
-		const zelli = await Company.create({ name: "Tron", slug: "tron", account_expire_date: "20200202" });
-		console.log("Zelli's auto-generated ID:", zelli.id);
-		return res.json({ ok: true });
-	} catch (error) {
-		return res.json({ ok: false });
-	}
-});
+// app.get("/testinsertdb", async (req, res, next) => {
+// 	try {
+// 		const zelli = await Company.create({ name: "Tron", slug: "tron", account_expire_date: "20200202" });
+// 		console.log("Zelli's auto-generated ID:", zelli.id);
+// 		return res.json({ ok: true });
+// 	} catch (error) {
+// 		return res.json({ ok: false });
+// 	}
+// });
 
-const syncDB = async () => {
-	try {
-		await sequelize.authenticate();
-		console.log("Connection has been established successfully.");
-	} catch (error) {
-		console.error("Unable to connect to the database:", error);
-	}
+// const syncDB = async () => {
+// 	try {
+// 		await sequelize.authenticate();
+// 		console.log("Connection has been established successfully.");
+// 	} catch (error) {
+// 		console.error("Unable to connect to the database:", error);
+// 	}
 
-	// 	await sequelize.sync({ force: true });
-	// 	// the defined model is the class itself
-	// 	console.log(Company === sequelize.models.Company); // true
+// 	await sequelize.sync({ force: true });
+// 	// the defined model is the class itself
+// 	console.log(Company === sequelize.models.Company); // true
 
-	// await User.sync({ force: true });
-	// await Company.sync({ force: true });
-	// await UserCompany.sync({ force: true });
-	// await Room.sync({ force: true });
-	// await sequelize.sync({ force: true });
-};
+// await User.sync({ force: true });
+// await Company.sync({ force: true });
+// await UserCompany.sync({ force: true });
+// await Room.sync({ force: true });
+// await sequelize.sync({ force: true });
+// };
 
-syncDB();
+// syncDB();

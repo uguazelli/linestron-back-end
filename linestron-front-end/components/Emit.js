@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Accordion from "react-native-collapsible/Accordion";
-
 import { io } from "socket.io-client";
+import { host } from "../Constants";
 const socket = io("localhost:3000");
 
 const Room = ({ room }) => {
@@ -11,7 +10,7 @@ const Room = ({ room }) => {
 
 	return (
 		<View style={styles.roomContainer}>
-			<Text style={{ margin: 10, width: "30%" }}>Room Number {room}</Text>
+			<Text style={{ margin: 10, width: "30%" }}>{room.name}</Text>
 			<TextInput style={styles.input} value={value} onChangeText={setValue} />
 			<TouchableOpacity style={styles.sendButton} onPress={emitValue}>
 				<Text style={{ color: "white" }}>Send</Text>
@@ -21,11 +20,31 @@ const Room = ({ room }) => {
 };
 
 const Emit = () => {
+	const [rooms, setRooms] = useState([]);
+	const getRooms = async () => {
+		try {
+			const response = await fetch(host + "/room/user/company", {
+				method: "GET",
+				credentials: "include",
+				headers: { Accept: "application/json", "Content-Type": "application/json" },
+			});
+			return await response.json();
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(async () => {
+		const r = await getRooms();
+		setRooms(r);
+	}, []);
+
 	return (
 		<ScrollView contentContainerStyle={{ alignItems: "center" }}>
 			<View style={styles.cardContainer}>
-				<Room room={1} />
-				<Room room={2} />
+				{rooms.map((room) => {
+					return <Room key={room.id} room={room} />;
+				})}
 			</View>
 		</ScrollView>
 	);
