@@ -4,8 +4,7 @@ const router = express.Router();
 const constants = require("../constants");
 const { initializeApp, applicationDefault, cert } = require("firebase-admin/app");
 const { getFirestore, Timestamp, FieldValue } = require("firebase-admin/firestore");
-const path = require("path");
-const templatesPath = path.join(__dirname, "../templates");
+
 // firestore
 initializeApp({ credential: cert(constants.firestoreCredential) });
 const db = getFirestore();

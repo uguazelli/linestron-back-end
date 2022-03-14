@@ -23,4 +23,5 @@ export default function App() {
 	}, []);
 
 	return <>{authenticated.ok === true ? <NavigationTab /> : <LoginPage setAuthenticated={setAuthenticated} />}</>;
+	// return <NavigationTab />;
 }

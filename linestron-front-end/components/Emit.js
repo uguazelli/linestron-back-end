@@ -4,17 +4,23 @@ import { io } from "socket.io-client";
 import { host } from "../Constants";
 const socket = io("localhost:3000");
 
+//zelli_sala1
+
 const Room = ({ room }) => {
 	const [value, setValue] = useState("");
-	const emitValue = () => socket.emit("emmitToRoom", { room: room, value: value });
+	const roomName = room.companySlug + "_" + room.unique_name;
+	const emitValue = () => socket.emit("emmitToRoom", { room: roomName, value: value });
 
 	return (
-		<View style={styles.roomContainer}>
-			<Text style={{ margin: 10, width: "30%" }}>{room.name}</Text>
-			<TextInput style={styles.input} value={value} onChangeText={setValue} />
-			<TouchableOpacity style={styles.sendButton} onPress={emitValue}>
-				<Text style={{ color: "white" }}>Send</Text>
-			</TouchableOpacity>
+		<View>
+			<View style={styles.roomContainer}>
+				<Text style={{ margin: 10, width: "30%" }}>{room.name}</Text>
+				<TextInput style={styles.input} value={value} onChangeText={setValue} />
+				<TouchableOpacity style={styles.sendButton} onPress={emitValue}>
+					<Text style={{ color: "white" }}>Send</Text>
+				</TouchableOpacity>
+			</View>
+			<Text>URL: {`${host}/company/${room.companySlug}/room/${room.unique_name}`}</Text>
 		</View>
 	);
 };
