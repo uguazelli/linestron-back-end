@@ -34,7 +34,7 @@ const Settings = ({ navigation }) => {
 					headers: { Accept: "application/json", "Content-Type": "application/json" },
 				});
 				let result = await response.json();
-				navigation.navigate("/admin");
+				navigation.navigate("/home");
 				return result;
 			} catch (error) {
 				console.log(error);

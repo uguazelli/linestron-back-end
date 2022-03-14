@@ -17,7 +17,7 @@ function Home() {
 				tabBarIcon: ({ focused, color, size }) => {
 					let iconName;
 					if (route.name === "/") iconName = "notifications-outline";
-					else if (route.name === "/settings") iconName = "settings-outline";
+					else if (route.name === "/admin") iconName = "settings-outline";
 					// You can return any component that you like here!
 					return <Ionicons name={iconName} size={size} color={color} />;
 				},
@@ -25,8 +25,8 @@ function Home() {
 				tabBarInactiveTintColor: "gray",
 			})}
 		>
-			<Tab.Screen name="/settings" component={Settings} options={{ title: "Settings" }} />
 			<Tab.Screen name="/" component={Emit} options={{ title: "Emit" }} />
+			<Tab.Screen name="/admin" component={Admin} options={{ title: "Admin" }} />
 		</Tab.Navigator>
 	);
 }
@@ -35,8 +35,8 @@ export default function NavigationTab() {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
-				<Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-				<Stack.Screen name="/admin" component={Admin} options={{ title: "Admin" }} />
+				<Stack.Screen name="/settings" component={Settings} options={{ title: "Company Select" }} />
+				<Stack.Screen name="/home" component={Home} options={{ headerShown: false }} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

@@ -19,13 +19,6 @@ const listEndpoints = require("express-list-endpoints");
 
 // const { Socket } = require("socket.io");
 
-// const { Sequelize, DataTypes, Model } = require("sequelize");
-// const sequelize = new Sequelize({ dialect: "sqlite", storage: "./database.db" });
-// const { User } = require("./models/User");
-// const { Company } = require("./models/Company");
-// const { UserCompany } = require("./models/UserCompany");
-// const { Room } = require("./models/Room");
-
 // Cors
 const corsOptions = {
 	origin: "http://localhost:19006",
