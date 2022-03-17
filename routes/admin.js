@@ -1,4 +1,3 @@
-const { async } = require("@firebase/util");
 const express = require("express");
 const router = express.Router();
 const constants = require("../constants");
@@ -12,8 +11,7 @@ const db = getFirestore();
 // middleware
 router.use((req, res, next) => {
 	if (req.session.email === undefined || req.session.email === null) {
-		res.redirect("/auth/login");
-		return;
+		return res.json({ ok: false, message: "user not logged in" });
 	}
 	next();
 });

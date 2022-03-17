@@ -1,6 +1,5 @@
 module.exports = Object.freeze({
-	MY_CONSTANT: "some value",
-	ANOTHER_CONSTANT: "another value",
+	corsOrigin: "http://localhost:19006",
 	firebaseConfig: {
 		apiKey: "AIzaSyATcWgmO37ZVBePq_v_0fT6p1CRxUGDpQc",
 		authDomain: "linestron-app.firebaseapp.com",
