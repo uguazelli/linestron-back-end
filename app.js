@@ -12,11 +12,11 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const listEndpoints = require("express-list-endpoints");
-const { corsOrigin } = require("./constants");
+const { CORS_ORIGIN } = require("./constants");
 
 // Cors
 const corsOptions = {
-	origin: corsOrigin,
+	origin: CORS_ORIGIN,
 	credentials: true,
 	optionsSuccessStatus: 200, // For legacy browser support
 };

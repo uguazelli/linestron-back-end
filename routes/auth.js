@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 var constants = require("../constants");
+const queries = require("../queries");
+const db = queries.DB;
 // Firebase
 const firebaseapp = require("firebase/app");
 const firebaseAuth = require("firebase/auth");
+const { authUsers } = require("../util");
 const app = firebaseapp.initializeApp(constants.firebaseConfig);
 const auth = firebaseAuth.getAuth();
 
@@ -12,6 +15,11 @@ router.get("/loggeduser", (req, res, next) => {
 	if (req.session.email == undefined) {
 		return res.json({ ok: false });
 	} else return res.json({ ok: true, user: req.session.email });
+});
+
+router.get("/authType/company/:companySlug", (req, res, next) => {
+	let result = res.json(authUsers(req.session.email, req.params.companySlug));
+	return result;
 });
 
 router.post("/login", async (req, res, next) => {

@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const constants = require("../constants");
-const { initializeApp, applicationDefault, cert } = require("firebase-admin/app");
-const { getFirestore, Timestamp, FieldValue } = require("firebase-admin/firestore");
-
-// firestore
-initializeApp({ credential: cert(constants.firestoreCredential) });
-const db = getFirestore();
 
 // middleware
 router.use((req, res, next) => {
