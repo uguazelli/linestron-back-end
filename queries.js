@@ -12,4 +12,6 @@ module.exports = Object.freeze({
 	ROOMS_UPDATE_LAST_NUMBER: `UPDATE Rooms SET lastNumber=? WHERE id=?;`,
 	ROOMS_GET_CURRENT_NUMBER: `SELECT r.id , r.lastNumber as 'roomLastNumber' FROM Companies c , Rooms r WHERE r.CompanyId = c.id AND c.slug = ? AND r.unique_name = ?`,
 	ROOMS_GET_LAST_BY_ROOM_ID: `SELECT c.id as 'companyId', c.name as 'companyName', c.slug as 'companySlug', r.id as 'roomId', r.name as 'roomName', r.unique_name as 'roomUniqueName', r.lastNumber as 'roomLastNumber' FROM Companies c , Rooms r WHERE r.CompanyId = c.id and r.id = ?`,
+	ROOMS_GET_CURRENT_BY_ROOM_UNIQUE_NAME: `SELECT * FROM Rooms WHERE unique_name = ?`,
+	ROOMS_UPDATE_CURRENT_BY_ROOM_UNIQUE_NAME: `UPDATE Rooms SET currentNumber = ? WHERE unique_name = ?`,
 });

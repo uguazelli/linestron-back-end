@@ -26,15 +26,39 @@ const persistnumber = async (companySlug, roomUniqueName, number) => {
 };
 
 //role = (admin, user)
-router.get("/:role/company", async (req, res, next) => {
+router.post("/:role/company/:companyId", async (req, res, next) => {
+	let email = req.body.user.email;
 	const stmt = db.prepare(queries.ROOMS_BY_COMPANY_ID);
-	const rows = stmt.all(req.params.role, req.session.companyId, req.session.email);
+	const rows = stmt.all(req.params.role, req.params.companyId, email);
+	return res.json(rows);
+});
+
+//role = (admin, user)
+router.post("/:role/admCompany", async (req, res, next) => {
+	let email = req.body.user.email;
+	let companyId = req.body.companyId;
+	const stmt = db.prepare(queries.ROOMS_BY_COMPANY_ID);
+	const rows = stmt.all(req.params.role, companyId, email);
 	return res.json(rows);
 });
 
 router.post("/:roomID", async (req, res, next) => {
 	let stmt = db.prepare(queries.ROOMS_UPDATE_BY_ID);
 	let update = stmt.run(req.body.name, req.body.unique_name, req.params.roomID);
+	return res.json(update);
+});
+
+// Get last number
+router.get("/:roomUniqueName/current", async (req, res, next) => {
+	let getRoom = db.prepare(queries.ROOMS_GET_CURRENT_BY_ROOM_UNIQUE_NAME);
+	let room = getRoom.get(req.params.roomUniqueName);
+	return res.json(room);
+});
+
+// update current
+router.post("/:roomUniqueName/current", async (req, res, next) => {
+	let stmt = db.prepare(queries.ROOMS_UPDATE_CURRENT_BY_ROOM_UNIQUE_NAME);
+	let update = stmt.run(req.body.number, req.params.roomUniqueName);
 	return res.json(update);
 });
 
