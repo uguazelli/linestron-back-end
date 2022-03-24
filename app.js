@@ -6,6 +6,7 @@ const roomRouter = require("./routes/room");
 const adminRouter = require("./routes/admin");
 const authRouter = require("./routes/auth");
 const companyRouter = require("./routes/company");
+const userRouter = require("./routes/user");
 // Other Imports
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -35,6 +36,7 @@ app.use("/room", roomRouter);
 app.use("/admin", adminRouter);
 app.use("/auth", authRouter);
 app.use("/company", companyRouter);
+app.use("/user", userRouter);
 
 app.get("/", (req, res, next) => res.json(listEndpoints(app)));
 

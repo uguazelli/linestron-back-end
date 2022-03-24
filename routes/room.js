@@ -43,9 +43,21 @@ router.post("/:role/admCompany", async (req, res, next) => {
 });
 
 router.post("/:roomID", async (req, res, next) => {
-	let stmt = db.prepare(queries.ROOMS_UPDATE_BY_ID);
-	let update = stmt.run(req.body.name, req.body.unique_name, req.params.roomID);
-	return res.json(update);
+	let execute;
+	if (req.params.roomID == 0) {
+		let stmt = db.prepare(queries.ROOMS_INSERT);
+		execute = stmt.run(req.body.name, req.body.unique_name, req.body.companyId);
+	} else {
+		let stmt = db.prepare(queries.ROOMS_UPDATE_BY_ID);
+		execute = stmt.run(req.body.name, req.body.unique_name, req.params.roomID);
+	}
+	return res.json(execute);
+});
+
+router.delete("/:roomID", async (req, res, next) => {
+	let stmt = db.prepare(queries.ROOMS_DELETE);
+	let execute = stmt.run(req.params.roomID);
+	return res.json(execute);
 });
 
 // Get last number
