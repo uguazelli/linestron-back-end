@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const constants = require("../constants");
+const axios = require("axios");
 const twilio = require("twilio");
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = require("../constants");
 const queries = require("../queries");
@@ -46,16 +47,22 @@ router.post("/:roomID", async (req, res, next) => {
 	let execute;
 	if (req.params.roomID == 0) {
 		let stmt = db.prepare(queries.ROOMS_INSERT);
-		execute = stmt.run(req.body.name, req.body.unique_name, req.body.companyId);
+		execute = stmt.run(req.body.name, req.body.unique_name, req.body.prefix, req.body.companyId);
 	} else {
 		let stmt = db.prepare(queries.ROOMS_UPDATE_BY_ID);
-		execute = stmt.run(req.body.name, req.body.unique_name, req.params.roomID);
+		execute = stmt.run(req.body.name, req.body.unique_name, req.body.prefix, req.params.roomID);
 	}
 	return res.json(execute);
 });
 
 router.delete("/:roomID", async (req, res, next) => {
 	let stmt = db.prepare(queries.ROOMS_DELETE);
+	let execute = stmt.run(req.params.roomID);
+	return res.json(execute);
+});
+
+router.put("/:roomID", async (req, res, next) => {
+	let stmt = db.prepare(queries.ROOMS_RESET_BY_ID);
 	let execute = stmt.run(req.params.roomID);
 	return res.json(execute);
 });
@@ -97,6 +104,20 @@ router.get("/:roomUniqueName/company/:companySlug/number/:number?", async (req, 
 	// 4 - Get company name, room name and last created number
 	let getStmt = db.prepare(queries.ROOMS_GET_LAST_BY_ROOM_ID);
 	let row = getStmt.get(room.id);
+
+	// Update Room Admin
+	axios
+		.post(constants.IO_SERVER + "/lastnumber", {
+			roomId: row.roomId,
+			numberGenerated: row.roomLastNumber,
+		})
+		.then(function (response) {
+			console.log(response);
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+
 	// 5 - Return json
 	return res.json(row);
 });

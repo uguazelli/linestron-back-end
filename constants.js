@@ -3,6 +3,7 @@ require("dotenv").config();
 module.exports = Object.freeze({
 	// CORS_ORIGIN: "http://localhost:19006",
 	CORS_ORIGIN: "*",
+	IO_SERVER: "http://localhost:9000",
 	TWILIO_PHONE_NUMBER: "+19124467374",
 	TWILIO_ACCOUNT_SID: process.env.accountSid,
 	TWILIO_AUTH_TOKEN: process.env.authToken,
