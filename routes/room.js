@@ -8,7 +8,7 @@ const queries = require("../queries");
 const { authUsers } = require("../util");
 const db = queries.DB;
 // firestore
-const { initializeApp, applicationDefault, cert } = require("firebase-admin/app");
+const { initializeApp, doc, getDoc, applicationDefault, cert } = require("firebase-admin/app");
 const { getFirestore, Timestamp, FieldValue } = require("firebase-admin/firestore");
 initializeApp({ credential: cert(constants.firestoreCredential) });
 const firestoreDb = getFirestore();
@@ -21,10 +21,45 @@ const persistnumber = async (companySlug, roomUniqueName, number) => {
 		number: number,
 		company: companySlug,
 		room: roomUniqueName,
+		clientPhone: "",
+		status: "open",
 		createdAt: Date().toString(),
 	});
 	return { ok: true };
 };
+
+const getPersistednumber = async (companySlug, roomUniqueName, number) => {
+	// collection = numbersID
+	const id = `${companySlug}_${roomUniqueName}_${number}`;
+	let docRef = firestoreDb.collection("numbersID").doc(id);
+	let doc = await docRef.get();
+	if (doc.exists) {
+		console.log("Document data:", doc.data());
+	} else {
+		// doc.data() will be undefined in this case
+		console.log("No such document!");
+	}
+
+	return { ok: true, message: doc.data() };
+};
+
+const sendSms = (phone, msg) => {
+	const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+	const from = TWILIO_PHONE_NUMBER;
+	const to = phone;
+	const body = msg;
+	client.messages.create({ body: body, from: from, to: to }).then((message) => console.log(message.sid));
+	return { ok: true };
+};
+
+// router.post("/sms/send/company/:company_name", async (req, res, next) => {
+// 	const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+// 	const from = TWILIO_PHONE_NUMBER;
+// 	const to = req.body.phoneNumber;
+// 	const body = `Hey there, we are almost ready!!! ${req.params.company_name} is waiting for you!`;
+// 	client.messages.create({ body: body, from: from, to: to }).then((message) => console.log(message.sid));
+// 	return res.json({ ok: true });
+// });
 
 //role = (admin, user)
 router.post("/:role/company/:companyId", async (req, res, next) => {
@@ -76,9 +111,35 @@ router.get("/:roomUniqueName/current", async (req, res, next) => {
 
 // update current
 router.post("/:roomUniqueName/current", async (req, res, next) => {
+	let user = req.body.user;
+	let number = req.body.number;
+	let roomUniqueName = req.params.roomUniqueName;
+	// Get Company
+	let companystmt = db.prepare(queries.COMPANY_GET_BY_ID);
+	let company = companystmt.get(user.user.email, req.body.companyId);
+	// Update Number
 	let stmt = db.prepare(queries.ROOMS_UPDATE_CURRENT_BY_ROOM_UNIQUE_NAME);
-	let update = stmt.run(req.body.number, req.params.roomUniqueName);
+	let update = stmt.run(number, roomUniqueName);
+	let previous3 = number >= 3 ? number - 3 : number;
+	const persisted = await getPersistednumber(company.slug, roomUniqueName, previous3);
+	if (persisted.message !== undefined) {
+		const phone = persisted.message.clientPhone;
+		if (phone !== "") {
+			console.log("send sms");
+			let msg = `Hey there, we are almost ready!!! ${company.name} is waiting for you!`;
+			const sendSmsMsg = sendSms(phone, msg);
+		}
+	}
 	return res.json(update);
+});
+
+// Update Phone Number
+router.post("/client/phone", async (req, res, next) => {
+	const id = req.body.id;
+	const phone = req.body.phone;
+	const docRef = await firestoreDb.collection("numbersID").doc(id);
+	const result = await docRef.update({ clientPhone: phone });
+	return res.json(result);
 });
 
 // create new number
@@ -104,8 +165,7 @@ router.get("/:roomUniqueName/company/:companySlug/number/:number?", async (req, 
 	// 4 - Get company name, room name and last created number
 	let getStmt = db.prepare(queries.ROOMS_GET_LAST_BY_ROOM_ID);
 	let row = getStmt.get(room.id);
-
-	// Update Room Admin
+	// 5 - Update Room Admin
 	axios
 		.post(constants.IO_SERVER + "/lastnumber", {
 			roomId: row.roomId,
@@ -118,17 +178,8 @@ router.get("/:roomUniqueName/company/:companySlug/number/:number?", async (req, 
 			console.log(error);
 		});
 
-	// 5 - Return json
+	// 6 - Return json
 	return res.json(row);
-});
-
-router.post("/sms/send/company/:company_name", async (req, res, next) => {
-	const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-	const from = TWILIO_PHONE_NUMBER;
-	const to = req.body.phoneNumber;
-	const body = `Hey there, we are almost ready!!! ${req.params.company_name} is waiting for you!`;
-	client.messages.create({ body: body, from: from, to: to }).then((message) => console.log(message.sid));
-	return res.json({ ok: true });
 });
 
 module.exports = router;

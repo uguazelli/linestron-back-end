@@ -10,6 +10,12 @@ router.post("/company/:companyId", async (req, res, next) => {
 	return res.json(row);
 });
 
+router.get("/email/:email", async (req, res, next) => {
+	let stmt = db.prepare(queries.USERS_GET_BY_EMAIL);
+	let row = stmt.get(req.params.email);
+	return res.json(row);
+});
+
 router.put("/", async (req, res, next) => {
 	if (req.body.id == 0) {
 		//insert

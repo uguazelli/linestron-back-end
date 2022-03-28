@@ -3,6 +3,7 @@ const db = new Database("./database.db", { verbose: console.log });
 
 module.exports = Object.freeze({
 	DB: db,
+	USERS_GET_BY_EMAIL: `SELECT u.*, uc.* FROM Users u, UserCompanies uc WHERE u.id = uc.UserId AND u.email = ?`,
 	USERS_GET_BY_COMPANY_ID: `SELECT u.*, uc.* FROM Users u , UserCompanies uc WHERE u.id = uc.UserId  AND uc.CompanyId = ?`,
 	USERS_GET_AUTH_BY_COMAPNY: `SELECT uc.* FROM Companies c, UserCompanies uc, Users u WHERE u.id = uc.UserId AND uc.CompanyId = c.id AND u.email = ? AND c.slug = ?`,
 	USERS_UPDATE_BY_ID: `UPDATE Users SET email = ? WHERE id = ?`,
